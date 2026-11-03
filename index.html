@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Реєстр акаунтів російських дипломатичних установ у X</title>
+  <meta name="description" content="Реєстр акаунтів, включених і не включених до вибірки дослідження російської дипломатичної комунікації у X.">
+  <style>
+    :root{--text:#1b1b1b;--muted:#666;--line:#d9d9d9;--soft:#f6f6f4;--link:#214d78;--active:#e7f1ea;--inactive:#f5ece8}
+    *{box-sizing:border-box}
+    body{margin:0;background:#fff;color:var(--text);font:15px/1.45 Arial,Helvetica,sans-serif}
+    main{max-width:1480px;margin:0 auto;padding:38px 28px 64px}
+    h1{max-width:900px;margin:0 0 10px;font:700 30px/1.15 Georgia,"Times New Roman",serif}
+    h2{margin:42px 0 12px;font:700 22px/1.2 Georgia,"Times New Roman",serif}
+    p{max-width:960px;margin:8px 0}
+    .meta{color:var(--muted);font-size:13px}
+    .controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:24px 0 12px}
+    label{font-weight:600}
+    input,select{height:38px;border:1px solid #aaa;border-radius:3px;background:#fff;padding:0 10px;font:inherit}
+    input{width:min(390px,100%)}
+    .download{margin-left:auto;color:var(--link);text-decoration:none;border-bottom:1px solid currentColor}
+    .count{color:var(--muted);font-size:13px}
+    .table-wrap{overflow:auto;border:1px solid var(--line)}
+    table{width:100%;border-collapse:collapse;min-width:1200px}
+    th,td{padding:9px 10px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);vertical-align:top;text-align:left}
+    th:last-child,td:last-child{border-right:0}
+    tbody tr:last-child td{border-bottom:0}
+    tbody tr:nth-child(even){background:var(--soft)}
+    th{position:sticky;top:0;z-index:1;background:#ececea;font-size:12px;line-height:1.2}
+    th button{all:unset;cursor:pointer;font-weight:700}
+    th button:focus-visible{outline:2px solid var(--link);outline-offset:2px}
+    a{color:var(--link);overflow-wrap:anywhere}
+    .num{text-align:right;white-space:nowrap}
+    .date{white-space:nowrap}
+    .handle{display:block;color:var(--muted);font-size:12px;margin-top:2px}
+    .status{display:inline-block;padding:2px 6px;border-radius:2px;font-size:12px;white-space:nowrap}
+    .status.active{background:var(--active)}
+    .status.inactive{background:var(--inactive)}
+    .note{margin-top:10px;color:var(--muted);font-size:13px}
+    .excluded{min-width:1050px}
+    footer{margin-top:38px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:12px}
+    @media (max-width:700px){main{padding:24px 14px 48px}h1{font-size:25px}.download{margin-left:0;width:100%}}
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>Реєстр акаунтів російських дипломатичних установ у X</h1>
+    <p>До вибірки дослідження включено 41 офіційний акаунт. У таблиці наведено джерело ідентифікації акаунта, кількість зібраних публікацій та межі його активності в корпусі.</p>
+    <p class="meta">Період дослідження: 1 січня 2022 — 15 травня 2026 року. Посилання на офіційних сайтах і статуси акаунтів повторно перевірено 3 листопада 2026 року.</p>
+  </header>
+
+  <section aria-labelledby="included-heading">
+    <h2 id="included-heading">Включено до вибірки</h2>
+    <div class="controls">
+      <label for="search">Пошук</label>
+      <input id="search" type="search" placeholder="Країна, установа або акаунт">
+      <label for="status">Статус</label>
+      <select id="status">
+        <option value="">Усі</option>
+        <option value="Активний у 2026 році">Активний у 2026 році</option>
+        <option value="Не публікував у 2026 році">Не публікував у 2026 році</option>
+      </select>
+      <span class="count" id="count"></span>
+      <a class="download" href="accounts.csv" download>Завантажити CSV</a>
+    </div>
+    <div class="table-wrap">
+      <table id="accounts-table">
+        <thead><tr>
+          <th><button data-key="country">Країна</button></th>
+          <th><button data-key="institution">Дипломатична установа</button></th>
+          <th><button data-key="accountName">Акаунт у X</button></th>
+          <th>Офіційний сайт</th>
+          <th><button data-key="tweets" data-type="number">Твітів</button></th>
+          <th><button data-key="first" data-type="date">Перша публікація</button></th>
+          <th><button data-key="last" data-type="date">Остання публікація</button></th>
+          <th><button data-key="status">Статус активності</button></th>
+        </tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <p class="note">Дати позначають межі зібраного корпусу, а не повну історію акаунта. «Активний у 2026 році» означає наявність щонайменше однієї публікації у корпусі за 2026 рік.</p>
+  </section>
+
+  <section aria-labelledby="excluded-heading">
+    <h2 id="excluded-heading">Не включено до вибірки</h2>
+    <div class="table-wrap">
+      <table class="excluded" id="excluded-table">
+        <thead><tr>
+          <th>Країна</th>
+          <th>Причина невключення</th>
+          <th>Представництво або статус</th>
+          <th>Джерела</th>
+        </tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <p class="note"><a href="excluded.csv" download>Завантажити перелік невключених країн у CSV</a></p>
+  </section>
+
+  <footer>Версія реєстру: 3 листопада 2026 року.</footer>
+</main>
+<script>
+const DATA={"included":[{"country":"Австрія","institution":"Посольство Росії в Австрії","accountName":"RusBotschaft Wien","xUrl":"https://x.com/RusBotWien","officialSite":"https://austria.mid.ru/ru/","tweets":2203,"first":"01.01.2022","last":"09.05.2026","status":"Активний у 2026 році"},{"country":"Азербайджан","institution":"Посольство Росії в Азербайджані","accountName":"Посольство России в Азербайджане","xUrl":"https://x.com/embrus_az","officialSite":"https://azerbaijan.mid.ru/ru/","tweets":591,"first":"01.01.2022","last":"09.05.2026","status":"Активний у 2026 році"},{"country":"Албанія","institution":"Посольство Росії в Албанії","accountName":"Russian Embassy in Albania","xUrl":"https://x.com/russianalbania","officialSite":"https://albania.mid.ru/ru/","tweets":734,"first":"06.01.2022","last":"19.04.2026","status":"Активний у 2026 році"},{"country":"Бельгія","institution":"Посольство Росії в Бельгії","accountName":"Ambassade de Russie en Belgique","xUrl":"https://x.com/amrusbel","officialSite":"https://belgium.mid.ru/ru/","tweets":400,"first":"03.01.2022","last":"09.05.2026","status":"Активний у 2026 році"},{"country":"Білорусь","institution":"Посольство Росії в Білорусі","accountName":"Russia in Belarus","xUrl":"https://x.com/RusEmbassyMinsk","officialSite":"https://belarus.mid.ru/ru/","tweets":977,"first":"03.01.2022","last":"09.05.2026","status":"Активний у 2026 році"},{"country":"Болгарія","institution":"Посольство Росії в Болгарії","accountName":"Посольство России в Болгарии","xUrl":"https://x.com/RusEmbBul","officialSite":"https://bulgaria.mid.ru/ru/","tweets":22,"first":"29.01.2022","last":"12.04.2022","status":"Не публікував у 2026 році"},{"country":"Боснія і Герцеговина","institution":"Посольство Росії в Боснії і Герцеговині","accountName":"Ambasada Rusije u BiH","xUrl":"https://x.com/RusEmbBih","officialSite":"https://bih.mid.ru/ru/","tweets":21,"first":"28.06.2022","last":"24.08.2023","status":"Не публікував у 2026 році"},{"country":"Ватикан","institution":"Посольство Росії при Святому Престолі (Ватикан) та при Суверенному Мальтійському Ордені за сумісництвом","accountName":"Russian Embassy to the Holy See and SMOM","xUrl":"https://x.com/emb_rus","officialSite":"https://vatican.mid.ru/ru/","tweets":136,"first":"13.01.2022","last":"22.04.2026","status":"Активний у 2026 році"},{"country":"Велика Британія","institution":"Посольство Росії у Великій Британії","accountName":"Посольство России в Великобритании","xUrl":"https://x.com/russianembassyr","officialSite":"https://london.mid.ru/ru/","tweets":470,"first":"01.01.2022","last":"08.05.2026","status":"Активний у 2026 році"},{"country":"Вірменія","institution":"Посольство Росії у Вірменії","accountName":"Посольство России в Армении","xUrl":"https://x.com/rusembassyARM","officialSite":"https://armenia.mid.ru/ru/","tweets":1164,"first":"07.01.2022","last":"09.05.2026","status":"Активний у 2026 році"},{"country":"Греція","institution":"Посольство Росії в Греції","accountName":"Rus Embassy, Greece","xUrl":"https://x.com/RFEmbassyGr","officialSite":"https://greece.mid.ru/ru/","tweets":2321,"first":"01.01.2022","last":"09.05.2026","status":"Активний у 2026 році"},{"country":"Грузія","institution":"Секція інтересів Росії при посольстві Швейцарії в Грузії","accountName":"Секция интересов России в Грузии","xUrl":"https://x.com/RuISEmbSwissGEO","officialSite":"https://georgia.mid.ru/ru/","tweets":150,"first":"10.01.2022","last":"09.05.2026","status":"Активний у 2026 році"},{"country":"Данія","institution":"Посольство Росії в Данії","accountName":"Embassy of Russia, DK","xUrl":"https://x.com/RusEmbDK","officialSite":"https://denmark.mid.ru/ru/","tweets":211,"first":"13.01.2022","last":"09.05.2026","status":"Активний у 2026 році"},{"country":"Естонія","institution":"Посольство Росії в Естонії","accountName":"Посольство России в Эстонии","xUrl":"https://x.com/RusEmbEst","officialSite":"https://estonia.mid.ru/ru/","tweets":391,"first":"03.01.2022","last":"09.05.2026","status":"Активний у 2026 році"},{"country":"Ірландія","institution":"Посольство Росії в Ірландії","accountName":"Russia in Ireland","xUrl":"https://x.com/Rus_Emb_Ireland","officialSite":"https://ireland.mid.ru/ru/","tweets":341,"first":"10.01.2022","last":"08.05.2026","status":"Активний у 2026 році"},{"country":"Ісландія","institution":"Посольство Росії в Ісландії","accountName":"RusEmbassy Iceland","xUrl":"https://x.com/RusEmb_Iceland","officialSite":"https://iceland.mid.ru/ru/","tweets":131,"first":"08.01.2022","last":"09.05.2026","status":"Активний у 2026 році"},{"country":"Іспанія","institution":"Посольство Росії в Іспанії","accountName":"Посольство России в Испании","xUrl":"https://x.com/EmbajadaRusaRU","officialSite":"https://spain.mid.ru/ru/","tweets":472,"first":"11.01.2022","last":"09.05.2026","status":"Активний у 2026 році"},{"country":"Італія","institution":"Посольство Росії в Італії","accountName":"Russian Embassy in Italy","xUrl":"https://x.com/rusembitaly","officialSite":"https://roma.mid.ru/ru/","tweets":1452,"first":"26.01.2022","last":"09.05.2026","status":"Активний у 2026 році"},{"country":"Кіпр","institution":"Посольство Росії на Кіпрі","accountName":"RusEmbCyprus","xUrl":"https://x.com/RusEmbCyprus","officialSite":"https://cyprus.mid.ru/ru/","tweets":55,"first":"04.01.2022","last":"09.05.2026","status":"Активний у 2026 році"},{"country":"Латвія","institution":"Посольство Росії в Латвії","accountName":"Посольство России в Латвии","xUrl":"https://x.com/LV_RUSEMBAS","officialSite":"https://latvia.mid.ru/ru/","tweets":742,"first":"01.01.2022","last":"09.05.2026","status":"Активний у 2026 році"},{"country":"Литва","institution":"Посольство Росії у Литві","accountName":"RusEmb_LT","xUrl":"https://x.com/RusEmb_LT","officialSite":"https://lithuania.mid.ru/ru/","tweets":99,"first":"21.01.2022","last":"09.05.2026","status":"Активний у 2026 році"},{"country":"Люксембург","institution":"Посольство Росії в Люксембурзі","accountName":"Russian Embassy, Lux","xUrl":"https://x.com/RusEmbLux","officialSite":"https://ambruslu.mid.ru/ru/","tweets":194,"first":"17.01.2022","last":"01.05.2026","status":"Активний у 2026 році"},{"country":"Мальта","institution":"Посольство Росії на Мальті","accountName":"Russian Embassy in Malta","xUrl":"https://x.com/RusEmbMalta","officialSite":"https://malta.mid.ru/ru/","tweets":52,"first":"01.03.2022","last":"12.02.2026","status":"Активний у 2026 році"},{"country":"Молдова","institution":"Посольство Росії в Молдові","accountName":"Посольство России в Молдавии","xUrl":"https://x.com/embrus_md","officialSite":"https://moldova.mid.ru/ru/","tweets":281,"first":"04.01.2022","last":"18.09.2023","status":"Не публікував у 2026 році"},{"country":"Нідерланди","institution":"Посольство Росії в Нідерландах","accountName":"Russian Embassy in NL","xUrl":"https://x.com/rusembassynl","officialSite":"https://netherlands.mid.ru/ru/","tweets":673,"first":"04.01.2022","last":"09.05.2026","status":"Активний у 2026 році"},{"country":"Німеччина","institution":"Посольство Росії в Німеччині","accountName":"Botschaft der Russischen Föderation","xUrl":"https://x.com/RusBotschaft","officialSite":"https://germany.mid.ru/ru/","tweets":3471,"first":"03.01.2022","last":"09.05.2026","status":"Активний у 2026 році"},{"country":"Норвегія","institution":"Посольство Росії в Норвегії","accountName":"Embassy of Russia in Norway","xUrl":"https://x.com/RusEmbNo","officialSite":"https://norway.mid.ru/ru/","tweets":596,"first":"10.01.2022","last":"09.05.2026","status":"Активний у 2026 році"},{"country":"Північна Македонія","institution":"Посольство Росії в Північній Македонії","accountName":"Посольство России МК","xUrl":"https://x.com/Russian_Emb_MKD","officialSite":"https://skopje.mid.ru/ru/","tweets":5181,"first":"01.01.2022","last":"09.05.2026","status":"Активний у 2026 році"},{"country":"Польща","institution":"Посольство Росії в Польщі","accountName":"Russian Embassy, PL","xUrl":"https://x.com/rusemb_pl","officialSite":"https://poland.mid.ru/ru/","tweets":394,"first":"04.01.2022","last":"09.05.2026","status":"Активний у 2026 році"},{"country":"Португалія","institution":"Посольство Росії в Португалії","accountName":"Embaixada da Rússia","xUrl":"https://x.com/EmbaixadaRusPt","officialSite":"https://portugal.mid.ru/ru/","tweets":2147,"first":"27.01.2022","last":"09.05.2026","status":"Активний у 2026 році"},{"country":"Сербія","institution":"Посольство Росії в Сербії","accountName":"Посольство России в Сербии","xUrl":"https://x.com/ambasadarusije","officialSite":"https://serbia.mid.ru/ru/","tweets":1186,"first":"24.03.2022","last":"09.05.2026","status":"Активний у 2026 році"},{"country":"Словенія","institution":"Посольство Росії в Словенії","accountName":"Посольство России в Словении","xUrl":"https://x.com/AmbrusSlo_Ru","officialSite":"https://veleposlanistvorusije.mid.ru/ru/","tweets":27,"first":"13.01.2022","last":"25.03.2022","status":"Не публікував у 2026 році"},{"country":"Туреччина","institution":"Посольство Росії в Туреччині","accountName":"RusEmbAnkara","xUrl":"https://x.com/RusEmbTurkey","officialSite":"https://turkey.mid.ru/ru/","tweets":3166,"first":"01.01.2022","last":"09.05.2026","status":"Активний у 2026 році"},{"country":"Угорщина","institution":"Посольство Росії в Угорщині","accountName":"Russian Embassy, HU","xUrl":"https://x.com/RusEmbHungary","officialSite":"https://hungary.mid.ru/ru/","tweets":1074,"first":"18.04.2022","last":"08.05.2026","status":"Активний у 2026 році"},{"country":"Фінляндія","institution":"Посольство Росії у Фінляндії","accountName":"Russian Embassy in Finland","xUrl":"https://x.com/RussianEmbFinla","officialSite":"https://helsinki.mid.ru/ru/","tweets":608,"first":"14.01.2022","last":"08.05.2026","status":"Активний у 2026 році"},{"country":"Франція","institution":"Посольство Росії у Франції","accountName":"Russie en France","xUrl":"https://x.com/AmbRusFrance","officialSite":"https://france.mid.ru/ru/","tweets":2358,"first":"03.01.2022","last":"09.05.2026","status":"Активний у 2026 році"},{"country":"Хорватія","institution":"Посольство Росії в Хорватії","accountName":"VeleposlanstvoRusije","xUrl":"https://x.com/RusEmbCro","officialSite":"https://croatia.mid.ru/ru/","tweets":19,"first":"16.01.2022","last":"19.04.2022","status":"Не публікував у 2026 році"},{"country":"Чехія","institution":"Посольство Росії в Чехії","accountName":"Посольство России в Чехии","xUrl":"https://x.com/ambruscz","officialSite":"https://czech.mid.ru/ru/embassy/","tweets":132,"first":"13.01.2022","last":"09.05.2026","status":"Активний у 2026 році"},{"country":"Чорногорія","institution":"Посольство Росії в Чорногорії","accountName":"Russia in Montenegro","xUrl":"https://x.com/AmbRusME","officialSite":"https://montenegro.mid.ru/ru/","tweets":339,"first":"03.01.2022","last":"08.04.2024","status":"Не публікував у 2026 році"},{"country":"Швейцарія","institution":"Посольство Росії у Швейцарії","accountName":"Russian Embassy Bern","xUrl":"https://x.com/RusEmbSwiss","officialSite":"https://switzerland.mid.ru/ru/","tweets":535,"first":"06.01.2022","last":"09.05.2026","status":"Активний у 2026 році"},{"country":"Швеція","institution":"Посольство Росії у Швеції","accountName":"Russian Embassy, SWE","xUrl":"https://x.com/RusEmbSwe","officialSite":"https://sweden.mid.ru/ru/","tweets":1416,"first":"01.01.2022","last":"09.05.2026","status":"Активний у 2026 році"}],"excluded":[{"country":"Андорра","reason":"Немає окремого посольства РФ у країні та окремого акаунта посольства в X","representation":"Акредитоване посольство РФ розташоване в Мадриді (Іспанія)","source":"https://www.govern.ad/fr/ministeres-et-secretaires-d-etat/ministere-des-affaires-etrangeres/le-ministere/affaires-bilaterales-et-consulaires/affaires-consulaires/visas-touristiques?delta=4&start=37","extra":""},{"country":"Сан-Марино","reason":"Немає окремого резидентного посольства РФ та окремого акаунта посольства в X","representation":"Посольство РФ у Сан-Марино розташоване в Римі (Італія)","source":"https://www.esteri.sm/pub1/EsteriSM/en/Relazioni-Internazionali/Rapporti-Bilaterali.html","extra":""},{"country":"Ліхтенштейн","reason":"Немає окремого резидентного посольства РФ та окремого акаунта посольства в X","representation":"Акредитоване представництво РФ — посольство в Берні (Швейцарія)","source":"https://www.llv.li/serviceportal2/amtsstellen/protokoll-der-regierung/liste_diplomatisches-corps-internetversion_en.pdf","extra":""},{"country":"Монако","reason":"У країні немає окремої закордонної установи МЗС РФ та окремого акаунта посольства в X","representation":"Найближче посольство — у Франції; консульське обслуговування забезпечує Генеральне консульство РФ у Марселі та Монако","source":"https://www.kdmid.ru/docs/monaco/russian-consular-offices/","extra":""},{"country":"Румунія","reason":"Акаунт посольства в X заблокований за порушення правил платформи","representation":"Заблокований","source":"https://ghostarchive.org/archive/TUXoE","extra":"https://help.x.com/uk/rules-and-policies/twitter-rules"},{"country":"Словаччина","reason":"Акаунт посольства в X є приватним і недоступним для збору публікацій","representation":"Приватний","source":"https://archive.ph/uJ2xu","extra":"https://slovakia.mid.ru/ru/"}]};
+const escapeHtml=value=>String(value??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[ch]));
+const handle=url=>{try{return "@"+new URL(url).pathname.split("/").filter(Boolean)[0]}catch{return ""}};
+const dateValue=value=>{const m=String(value).match(/(\d{2})\.(\d{2})\.(\d{4})/);return m?Number(m[3]+m[2]+m[1]):0};
+let rows=[...DATA.included];
+let sort={key:"country",direction:1,type:"text"};
+
+function renderAccounts(){
+  const query=document.getElementById("search").value.trim().toLocaleLowerCase("uk");
+  const status=document.getElementById("status").value;
+  const filtered=rows.filter(row=>{
+    const hay=[row.country,row.institution,row.accountName,handle(row.xUrl)].join(" ").toLocaleLowerCase("uk");
+    return (!query||hay.includes(query))&&(!status||row.status===status);
+  }).sort((a,b)=>{
+    let av=a[sort.key],bv=b[sort.key];
+    if(sort.type==="number"){av=Number(av);bv=Number(bv)}
+    else if(sort.type==="date"){av=dateValue(av);bv=dateValue(bv)}
+    else return String(av).localeCompare(String(bv),"uk")*sort.direction;
+    return (av-bv)*sort.direction;
+  });
+  document.querySelector("#accounts-table tbody").innerHTML=filtered.map(row=>`<tr>
+    <td>${escapeHtml(row.country)}</td>
+    <td>${escapeHtml(row.institution)}</td>
+    <td><a href="${escapeHtml(row.xUrl)}" target="_blank" rel="noopener">${escapeHtml(row.accountName)}</a><span class="handle">${escapeHtml(handle(row.xUrl))}</span></td>
+    <td><a href="${escapeHtml(row.officialSite)}" target="_blank" rel="noopener">Офіційний сайт</a></td>
+    <td class="num">${row.tweets.toLocaleString("uk-UA")}</td>
+    <td class="date">${escapeHtml(row.first)}</td>
+    <td class="date">${escapeHtml(row.last)}</td>
+    <td><span class="status ${row.status.startsWith("Активний")?"active":"inactive"}">${escapeHtml(row.status)}</span></td>
+  </tr>`).join("");
+  document.getElementById("count").textContent=`Показано: ${filtered.length} із ${rows.length}`;
+}
+document.querySelectorAll("#accounts-table th button").forEach(button=>button.addEventListener("click",()=>{
+  const key=button.dataset.key;
+  sort={key,direction:sort.key===key?-sort.direction:1,type:button.dataset.type||"text"};
+  renderAccounts();
+}));
+document.getElementById("search").addEventListener("input",renderAccounts);
+document.getElementById("status").addEventListener("change",renderAccounts);
+
+document.querySelector("#excluded-table tbody").innerHTML=DATA.excluded.map(row=>{
+  const sources=[row.source,row.extra].filter(Boolean).map((url,i)=>`<a href="${escapeHtml(url)}" target="_blank" rel="noopener">Джерело ${i+1}</a>`).join("<br>");
+  return `<tr><td>${escapeHtml(row.country)}</td><td>${escapeHtml(row.reason)}</td><td>${escapeHtml(row.representation)}</td><td>${sources}</td></tr>`;
+}).join("");
+renderAccounts();
+</script>
+</body>
+</html>
+
